@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BrewMind ☕ — AI Café</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ══════════════ LOADER ══════════════ -->
+<div class="loader-screen" id="loader">
+  <div class="loader-content">
+    <div class="loader-cup">☕</div>
+    <h2 class="loader-title">BrewMind</h2>
+    <p class="loader-sub">Brewing your personalized experience…</p>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════ ONBOARDING ══════════════ -->
+<div class="modal-overlay" id="onboardingOverlay">
+  <div class="modal onboarding-modal">
+    <div class="modal-art">☕</div>
+    <h2 class="modal-title">Welcome to <span class="brand">BrewMind</span></h2>
+    <p class="modal-sub">Your AI-powered café that learns your taste</p>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="userName" placeholder="e.g. Priya, Alex…" autocomplete="off" />
+    </div>
+    <div class="form-group">
+      <label>Current Weather</label>
+      <div class="weather-chips">
+        <button class="chip active" data-weather="normal">🌤 Normal</button>
+        <button class="chip" data-weather="hot">☀️ Hot</button>
+        <button class="chip" data-weather="cold">❄️ Cold</button>
+        <button class="chip" data-weather="rainy">🌧 Rainy</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>How are you feeling?</label>
+      <div class="mood-chips">
+        <button class="chip" data-mood="energetic">⚡ Energetic</button>
+        <button class="chip" data-mood="relaxed">😌 Relaxed</button>
+        <button class="chip" data-mood="happy">😊 Happy</button>
+        <button class="chip" data-mood="tired">😴 Tired</button>
+        <button class="chip" data-mood="healthy">🥗 Healthy</button>
+        <button class="chip" data-mood="indulgent">🍫 Indulgent</button>
+      </div>
+    </div>
+    <button class="btn-primary btn-full" id="startBtn">Let's Brew! ☕</button>
+  </div>
+</div>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header class="header" id="mainHeader">
+  <div class="header-inner">
+    <a class="logo" href="#">☕ BrewMind</a>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-page="home">Home</button>
+      <button class="nav-tab" data-page="menu">Menu</button>
+      <button class="nav-tab" data-page="track">Track Order</button>
+    </nav>
+    <div class="header-right">
+      <div class="user-badge" id="userBadge">
+        <span class="user-avatar">👤</span>
+        <span id="headerUserName">Guest</span>
+      </div>
+      <button class="cart-btn" id="cartToggle">
+        🛒 Cart <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════ PAGES ══════════════ -->
+<main class="main">
+
+  <!-- ── HOME PAGE ── -->
+  <section class="page active" id="page-home">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-tag">🤖 AI-Powered</div>
+        <h1 class="hero-title">Your café<br><span class="gradient-text">knows you</span></h1>
+        <p class="hero-desc">BrewMind learns your preferences, tracks the queue in real-time, and makes sure your order is ready exactly when you need it.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" id="heroOrderBtn">Start Ordering</button>
+          <button class="btn-ghost" id="heroTrackBtn">Track Order</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card float-anim">
+          <div class="hero-card-icon">🤖</div>
+          <div>
+            <div class="hero-card-label">AI Insight</div>
+            <div class="hero-card-val" id="heroInsight">Analyzing your taste…</div>
+          </div>
+        </div>
+        <div class="hero-card float-anim delay-1">
+          <div class="hero-card-icon">⏱</div>
+          <div>
+            <div class="hero-card-label">Queue Status</div>
+            <div class="hero-card-val" id="heroQueue">Checking…</div>
+          </div>
+        </div>
+        <div class="hero-card float-anim delay-2">
+          <div class="hero-card-icon">🌡</div>
+          <div>
+            <div class="hero-card-label">Best For Now</div>
+            <div class="hero-card-val" id="heroContext">Morning pick-me-up</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Personalized Recs -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">🤖 AI Picks For You</h2>
+          <p class="section-sub" id="recSubtitle">Based on your preferences & time of day</p>
+        </div>
+        <button class="btn-ghost-sm" id="refreshRecs">Refresh ↻</button>
+      </div>
+      <div class="recs-grid" id="recsGrid">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <!-- Mood Banner -->
+    <section class="mood-banner">
+      <div class="mood-banner-inner">
+        <div class="mood-emoji">🧠</div>
+        <div>
+          <h3>Mood-Based AI</h3>
+          <p>Tell us how you feel and we'll instantly suggest the perfect drink</p>
+        </div>
+        <button class="btn-primary" id="moodBtn">Change Mood</button>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section">
+      <h2 class="section-title center-text">How BrewMind Works</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Order History AI</h3>
+          <p>We learn from every order to surface what you'll love next time — no manual favorites needed.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🕐</div>
+          <h3>Time-Aware Menu</h3>
+          <p>Morning coffee, afternoon cold brew, evening chai — the AI surfaces the right item at the right time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Live Wait Tracker</h3>
+          <p>Real-time queue monitoring with smart express item suggestions when waits are high.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌦</div>
+          <h3>Weather-Aware Picks</h3>
+          <p>Cold brew on a hot day, warm chai in the rain — our AI reads the weather to match your mood.</p>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <!-- ── MENU PAGE ── -->
+  <section class="page" id="page-menu">
+    <div class="menu-header">
+      <h2 class="page-title">Our Menu</h2>
+      <div class="menu-controls">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="menuSearch" placeholder="Search items…" />
+        </div>
+        <div class="filter-row" id="categoryFilters">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Wait estimate bar -->
+    <div class="wait-bar" id="waitBar" style="display:none">
+      <div class="wait-bar-inner">
+        <span class="wait-icon">⏱</span>
+        <span id="waitBarText">Calculating wait time…</span>
+        <span class="wait-tip" id="waitBarTip"></span>
+      </div>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- ── TRACK ORDER PAGE ── -->
+  <section class="page" id="page-track">
+    <div class="track-wrap">
+      <h2 class="page-title">Track Your Order</h2>
+      <div class="track-input-group">
+        <input type="text" id="trackOrderId" placeholder="Enter Order ID e.g. ORD0001" />
+        <button class="btn-primary" id="trackBtn">Track</button>
+      </div>
+
+      <div class="track-result" id="trackResult" style="display:none">
+        <div class="track-card">
+          <div class="track-id-row">
+            <span class="track-oid" id="trackOid"></span>
+            <span class="status-badge" id="trackStatus"></span>
+          </div>
+          <div class="track-steps">
+            <div class="track-step" id="step-pending">
+              <div class="step-dot"></div>
+              <div class="step-text">Order Placed</div>
+            </div>
+            <div class="track-step" id="step-preparing">
+              <div class="step-dot"></div>
+              <div class="step-text">Preparing</div>
+            </div>
+            <div class="track-step" id="step-ready">
+              <div class="step-dot"></div>
+              <div class="step-text">Ready for Pickup</div>
+            </div>
+          </div>
+          <div class="track-details">
+            <div class="track-detail-row">
+              <span>Customer</span>
+              <strong id="trackName"></strong>
+            </div>
+            <div class="track-detail-row">
+              <span>Items</span>
+              <strong id="trackItems"></strong>
+            </div>
+            <div class="track-detail-row">
+              <span>Total</span>
+              <strong id="trackTotal"></strong>
+            </div>
+            <div class="track-detail-row">
+              <span>Est. Wait</span>
+              <strong id="trackWait"></strong>
+            </div>
+            <div class="track-detail-row">
+              <span>Remaining</span>
+              <strong id="trackRemaining"></strong>
+            </div>
+          </div>
+          <!-- Progress ring -->
+          <div class="progress-ring-wrap">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="50"/>
+              <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="50"/>
+            </svg>
+            <div class="ring-label" id="ringLabel">0 min left</div>
+          </div>
+          <button class="btn-ghost-sm" id="refreshTrack">↻ Refresh Status</button>
+        </div>
+      </div>
+
+      <!-- Queue Display -->
+      <div class="queue-panel">
+        <h3>🍳 Live Kitchen Queue</h3>
+        <div class="queue-list" id="queueList">
+          <p class="empty-queue">No active orders right now. Be the first! ☕</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════ CART DRAWER ══════════════ -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>🛒 Your Order</h3>
+    <button class="close-btn" id="cartClose">✕</button>
+  </div>
+
+  <div class="cart-body" id="cartBody">
+    <div class="empty-cart">
+      <div class="empty-icon">🧺</div>
+      <p>Your cart is empty</p>
+      <button class="btn-ghost-sm" id="browseMenuBtn">Browse Menu</button>
+    </div>
+  </div>
+
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="wait-estimate-box" id="cartWaitBox">
+      <div class="wait-est-row">
+        <span>⏱ Est. Wait</span>
+        <strong id="cartWaitTime">— min</strong>
+      </div>
+      <p class="wait-est-tip" id="cartWaitTip"></p>
+    </div>
+    <div class="cart-total-row">
+      <span>Total</span>
+      <strong id="cartTotal">₹0</strong>
+    </div>
+    <button class="btn-primary btn-full" id="placeOrderBtn">Place Order</button>
+  </div>
+</aside>
+
+<!-- ══════════════ MOOD MODAL ══════════════ -->
+<div class="modal-overlay hidden" id="moodOverlay">
+  <div class="modal">
+    <button class="close-btn modal-close" data-modal="moodOverlay">✕</button>
+    <h3 class="modal-title">How Are You Feeling?</h3>
+    <div class="mood-grid" id="moodGrid">
+      <button class="mood-card" data-mood="energetic"><span>⚡</span>Energetic</button>
+      <button class="mood-card" data-mood="relaxed"><span>😌</span>Relaxed</button>
+      <button class="mood-card" data-mood="happy"><span>😊</span>Happy</button>
+      <button class="mood-card" data-mood="tired"><span>😴</span>Tired</button>
+      <button class="mood-card" data-mood="healthy"><span>🥗</span>Healthy</button>
+      <button class="mood-card" data-mood="indulgent"><span>🍫</span>Indulgent</button>
+    </div>
+    <div class="mood-results hidden" id="moodResults">
+      <h4>Suggested for your mood:</h4>
+      <div class="mood-recs" id="moodRecs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ORDER SUCCESS MODAL ══════════════ -->
+<div class="modal-overlay hidden" id="successOverlay">
+  <div class="modal success-modal">
+    <div class="success-anim">🎉</div>
+    <h3 class="modal-title">Order Placed!</h3>
+    <p id="successMsg"></p>
+    <div class="success-details" id="successDetails"></div>
+    <button class="btn-primary" id="successTrackBtn">Track My Order</button>
+    <button class="btn-ghost" id="successCloseBtn">Continue Browsing</button>
+  </div>
+</div>
+
+<!-- ══════════════ TOAST ══════════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
